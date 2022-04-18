@@ -1,0 +1,123 @@
+﻿@page "/basket"
+@using System.Text
+
+@*<h5>Basket @Convert.ToBase64String(Encoding.ASCII.GetBytes(basket.ID))</h5>*@
+<!-- =================== COMPONENT CART+SUMMARY ====================== -->
+<div class="row">
+    <div class="col-lg-9">
+
+        <div class="card">
+            <div class="content-body">
+                <h4 class="card-title mb-4 p-4">Your shopping cart</h4>
+                @foreach (var item in basket?.Items)
+                {
+                    <article class="row gy-3 mb-4 px-4">
+                        <div class="col-lg-5">
+                            <figure class="itemside me-lg-5">
+                                @*<div class="aside"><img src="./Website layout sample(1)_files/11.jpg" class="img-sm img-thumbnail"></div>*@
+                                <figcaption class="info">
+                                    <p class="text-black fw-bold">@item.Name</p>
+                                    <p class="text-muted"> @item.Description </p>
+                                </figcaption>
+                            </figure>
+                        </div>
+                        @*<div class="col-auto">
+                            <select style="width: 100px" class="form-select">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            </select>
+                            </div>*@
+                        <div class="col-lg-2 col-sm-4 col-6">
+                            <div class="price-wrap lh-sm">
+                                <var class="price h6">$@item?.Price</var>  <br>
+                                <small class="text-muted"> USD </small>
+                            </div> <!-- price-wrap .// -->
+                    </div>
+                        <div class="col-lg col-sm-4">
+                            <div class="float-lg-end">
+                                @*<a href="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/page-order-cart.html#" class="btn btn-light"> <i class="fa fa-heart"></i></a>*@
+                                <button class="btn btn-light text-danger" @onclick="(()=>RemoveItem(item))"> Remove</button>
+                            </div>
+                        </div>
+                    </article> <!-- row.// -->
+                }
+            </div> <!-- card-body .// -->
+            @* <div class="content-body border-top">
+                <p><i class="me-2 text-muted fa-lg fa fa-truck"></i> Free Delivery within 1-2 weeks</p>
+                <p class="text-muted">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip
+                </p>
+                </div>*@ <!-- card-body.// -->
+
+        </div> <!-- card.// -->
+
+    </div> <!-- col.// -->
+    <aside class="col-lg-3">
+
+        <div class="card mb-3">
+            <div class="card-body">
+                <div>
+                    <div class="form-group">
+                        <label class="form-label">Have coupon?</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="" placeholder="Coupon code">
+                            <button class="btn btn-light">Apply</button>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- card-body.// -->
+        </div> <!-- card.// -->
+
+        <div class="card">
+            <div class="card-body">
+                <dl class="dlist-align">
+                    <dt>Total price:</dt>
+                    <dd class="text-end"> $@basket.Items.Sum(x=>x.Price)</dd>
+                </dl>
+                <dl class="dlist-align">
+                    <dt>Discount:</dt>
+                    <dd class="text-end text-success"> - $0.00 </dd>
+                </dl>
+                <dl class="dlist-align">
+                    <dt>TAX:</dt>
+                    <dd class="text-end"> $@Tax </dd>
+                </dl>
+                <hr>
+                <dl class="dlist-align">
+                    <dt>Total:</dt>
+                    <dd class="text-end text-dark h5"> $@(basket.Items.Sum(x=>x.Price) + Tax) </dd>
+                </dl>
+
+                <div class="d-grid gap-2 my-3">
+                    <a href="/basket" class="btn btn-success w-100"> Make Purchase </a>
+                    <a href="" class="btn btn-light w-100"> Back to shop </a>
+                </div>
+            </div> <!-- card-body.// -->
+        </div> <!-- card.// -->
+
+    </aside> <!-- col.// -->
+
+</div> <!-- row.// -->
+<!-- =================== COMPONENT 1 CART+SUMMARY .//END  ====================== -->
+@code {
+    [Inject]
+    public AppService service { get; set; }
+
+    private decimal Tax = 14;
+    private Basket basket = default!;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        basket = service.GetBasket;
+    }
+
+    private void RemoveItem(Article article)
+    {
+        service.RemoveItem(article);
+    }
+}

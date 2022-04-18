@@ -1,14 +1,17 @@
 ﻿@page "/"
+@inject NavigationManager navService
 
 <PageTitle>Home - Catalog</PageTitle>
 
 <div class="container-fluid">
     <div class="row">
         <Title OurTitle="Catalog" TextColor="text-warning" />
-        <button class="btn btn-outline-info">
-            <span class="oi oi-cart"></span>
-            <span class="text-black font-monospace">@Basket.Count</span>
-        </button>
+        <div class="col-xs-8">
+            <button class="btn btn-outline-info" @onclick="(()=>OpenBasket())">
+                <span class="oi oi-cart"></span>
+                <span class="text-black font-monospace">@Basket.Count</span>
+            </button>
+        </div>
     </div>
     <div class="row">
         <ol class="list-group list-group-numbered">
@@ -38,23 +41,25 @@
     </div>
 </div>
 
+
+
 @code {
+
+    [Inject]
+    public AppService service { get; init; }
+
     List<Article>? Articles;
     List<int>? Basket;
+    List<Article>? CompletedBasket;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
         //do some stuff
-        Basket = new List<int>();
+        Basket = service.Basket;
+        CompletedBasket = service.CompletedBasket;
 
-        Articles = new List<Article>
-        {
-            new Article("Banana","Food", 5,1),
-            new Article("Phone","Electronic", 100,2),
-            new Article("Compute (desktop)","Electronic", 300,3),
-            new Article("Car","Cars for people", 2000,4)
-        };
+        Articles = service.Articles;
     }
 
     private void BuyNow(int id)
@@ -75,22 +80,14 @@
             //tells that there is not item selected
         }
 
-        Basket.Add(id);
+        service.Basket.Add(id);
     }
 
-    public class Article
+    private void OpenBasket()
     {
-        public int Id { get; set; }
-        public string? Name { get; set; }
-        public string? Description { get; set; }
-        public decimal Price { get; set; }
-
-        public Article(string name, string desc, decimal price, int id)
-        {
-            Name = name;
-            Description = desc;
-            Price = price;
-            Id = id;
-        }
+        service.Completed();
+        navService.NavigateTo("/basket");
     }
+
+
 }
