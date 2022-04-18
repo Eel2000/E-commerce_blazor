@@ -1,0 +1,25 @@
+﻿@page "/counter"
+
+<PageTitle>Counter</PageTitle>
+
+<Title OurTitle="Counter" TextColor="text-danger" />
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+<button class=@DefaultColor @onclick="ChangeColor">Hey Change the color</button>
+
+@code {
+    private int currentCount = 0;
+    private string DefaultColor = "btn btn-danger";
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+
+    private void ChangeColor()
+    {
+        DefaultColor = "btn btn-success";
+    }
+}

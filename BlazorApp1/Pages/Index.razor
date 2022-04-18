@@ -1,0 +1,96 @@
+﻿@page "/"
+
+<PageTitle>Home - Catalog</PageTitle>
+
+<div class="container-fluid">
+    <div class="row">
+        <Title OurTitle="Catalog" TextColor="text-warning" />
+        <button class="btn btn-outline-info">
+            <span class="oi oi-cart"></span>
+            <span class="text-black font-monospace">@Basket.Count</span>
+        </button>
+    </div>
+    <div class="row">
+        <ol class="list-group list-group-numbered">
+            @foreach (var item in Articles)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">@item.Name</div>
+                        @item.Description
+                        <span class="badge bg-primary rounded-pill">@item.Price $</span>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-warning">
+                                <span class="oi oi-cart"></span>
+                            </button>
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-success" @onclick="(()=>AddToBasket(item.Id))">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </li>
+            }
+        </ol>
+    </div>
+</div>
+
+@code {
+    List<Article>? Articles;
+    List<int>? Basket;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        //do some stuff
+        Basket = new List<int>();
+
+        Articles = new List<Article>
+        {
+            new Article("Banana","Food", 5,1),
+            new Article("Phone","Electronic", 100,2),
+            new Article("Compute (desktop)","Electronic", 300,3),
+            new Article("Car","Cars for people", 2000,4)
+        };
+    }
+
+    private void BuyNow(int id)
+    {
+        if (id == 0)
+        {
+            //tells that there is not item selected
+        }
+
+        //perfom the buying action
+
+    }
+
+    private void AddToBasket(int id)
+    {
+        if (id == 0)
+        {
+            //tells that there is not item selected
+        }
+
+        Basket.Add(id);
+    }
+
+    public class Article
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public decimal Price { get; set; }
+
+        public Article(string name, string desc, decimal price, int id)
+        {
+            Name = name;
+            Description = desc;
+            Price = price;
+            Id = id;
+        }
+    }
+}
